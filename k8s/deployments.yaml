@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appapi-deployment
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: appapi
+  template:
+    metadata:
+      labels:
+        app: appapi
+    spec:
+      containers:
+      - name: appapi
+        image: your-registry/appapi:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-ports-config
+              key: APPAPI_PORT
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appinfo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appinfo
+  template:
+    metadata:
+      labels:
+        app: appinfo
+    spec:
+      containers:
+      - name: appinfo
+        image: your-registry/appinfo:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-ports-config
+              key: APPINFO_PORT
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: applogin-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: applogin
+  template:
+    metadata:
+      labels:
+        app: applogin
+    spec:
+      containers:
+      - name: applogin
+        image: your-registry/applogin:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: app-ports-config
+              key: APPLOGIN_PORT
